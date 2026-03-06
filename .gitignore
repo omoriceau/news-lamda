@@ -1,0 +1,53 @@
+# AWS SAM build output
+.aws-sam/
+
+# Environment & credentials
+env.json
+env-dev.json
+env-prod.json
+creds.sh
+*.env
+.env*
+
+# AWS credentials
+.aws/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# Virtual environment config
+pyvenv.cfg
+.python-version
+
+# Lambda response output
+response.json
+
+# Local news JSON dumps
+news_*.json
+
+# SAM config (contains region/stack info, optional to commit)
+# samconfig.toml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+bin/
+lib/
+lib64

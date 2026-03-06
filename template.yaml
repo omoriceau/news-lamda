@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: News API Lambda that stores results in S3
+
+Globals:
+  Function:
+    Timeout: 15
+    Runtime: python3.11
+    Architectures:
+      - x86_64
+
+Resources:
+  NewsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub news-api-${AWS::AccountId}-${AWS::Region}
+
+  NewsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: lambda_function.lambda_handler
+      Timeout: 30
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+      Environment:
+        Variables:
+          S3_BUCKET_NAME: !Ref NewsBucket
+          NEWS_API_KEY: "746af4a853c14cb08ad034ec6dbb882e"
+          NEWS_COUNT: "10"
+          NEWS_TOPICS: "ai,cloud,security,devops,programming"
+
+      Policies:
+        - S3WritePolicy:
+            BucketName: !Ref NewsBucket
+
+      Events:
+        FetchNews:
+          Type: Api
+          Properties:
+            Path: /news
+            Method: get
+
+
+  NewsBucket:
+    Type: AWS::S3::Bucket
+
+
+Outputs:
+
+  ApiEndpoint:
+    Description: API Gateway endpoint
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/news"
+
+  NewsFunctionArn:
+    Description: Lambda ARN
+    Value: !GetAtt NewsFunction.Arn
+
+  BucketName:
+    Description: S3 bucket storing news
+    Value: !Ref NewsBucket
